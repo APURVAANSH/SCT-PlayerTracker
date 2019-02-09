@@ -1,0 +1,113 @@
+settings:
+  symbol: "§a§l♙" # Symbol displayed on the compass to represent this kind of trackers positions.
+  temp:   "♃"     # Advanced: Symbol temporary used by the plugin, must be unique, 1 char and not used in "symbol".
+
+  request_duration: 120 # Duration (in seconds) before a tracking request expires.
+
+  limits:
+    START: 1 # Number of maximum simultaneous positions a player (from this tracker) can track
+
+locales:
+  en:
+    name: "player"
+
+    list: "{prefix}&rTracked players: {list}."
+    list_empty: "{prefix}&rNo player tracked."
+
+    ASK: "{prefix}&rTracking request sent to {target}."
+    START: "{prefix}&6You are now tracking &e{target}&6."
+    STOP: "{prefix}&6You no longer track &e{target}&6."
+
+    request:
+      message: |
+        {prefix}&8--------------------------------------
+        &8|
+        &8|                 &e{player} &7want to track you.
+        &8|
+        &8|                   &8[ {deny} &8] &f/&8 [ {accept} &8] &f?
+        &8|
+        &8----------------------------------------------------
+      accept: "&a&lACCEPT"
+      accept_hover: |
+        Click to &e&laccept
+        &7 -- or type --
+        &c/sctaccept {player}
+      deny: "&c&lDENY"
+      deny_hover: |
+        Click to &e&ldeny
+        &7 -- or type --
+        &c/sctdeny {player}
+      accepted:
+        player: "{prefix}&e{target}&r has &aaccepted&r your request."
+        target: "{prefix}&e{player}&r is now tracking you..."
+        player_limit_reached: "{prefix}&e{target}&r has &aaccepted&r your request, but you cannot track more players."
+        target_limit_reached: "{prefix}&e{player}&r cannot track more players and is NOT tracking you for now..."
+      refused:
+        player: "{prefix}&e{target}&r has &crefused&r your request."
+        target: "{prefix}&e{player}&r will not track you."
+
+    help:
+      noargs: |
+        &r- &c/{command} &e{tracker}
+        &7  Show list of players you are currently tracking.
+      ASK: |
+        &r- &c/{command} &e{tracker} &6{ASK} &3<name>
+        &7  Ask to a player to track his position.
+      START: |
+        &r- &c/{command} &e{tracker} &6{START} &3<name>
+        &7  Begin the tracking of this player (without asking).
+      STOP: |
+        &r- &c/{command} &e{tracker} &6{STOP} &3<name>
+        &7  End the tracking of this player.
+
+  fr:
+    name: "joueur"
+
+    list: "{prefix}&rJoueurs pistés : {list}."
+    list_empty: "{prefix}&rAucun joueur pisté."
+
+    ASK: "{prefix}&rDemande pistage envoyée à {target}."
+    START: "{prefix}&6Tu pistes maintenant &e{target}&6."
+    STOP: "{prefix}&6Tu ne pistes plus &e{target}&6."
+
+    request:
+      message: |
+        {prefix}&8--------------------------------------
+        &8|
+        &8|                 &e{player} &7veut te pister.
+        &8|
+        &8|                   &8[ {deny} &8] &f/&8 [ {accept} &8] &f?
+        &8|
+        &8----------------------------------------------------
+      accept: "&a&lACCEPTER"
+      accept_hover: |
+        Clique pour &e&laccepter
+        &7 -- ou tape --
+        &c/sctaccept {player}
+      deny: "&c&lREFUSER"
+      deny_hover: |
+        Clique pour &e&lrefuser
+        &7 -- ou tape --
+        &c/sctdeny {player}
+      accepted:
+        player: "{prefix}&e{target}&r a &aaccepté&r ta demande."
+        target: "{prefix}&e{player}&r te pistes à présent..."
+        player_limit_reached: "{prefix}&e{target}&r a &aaccepté&r ta demande, mais tu ne peux pas pister d'autre joueurs."
+        target_limit_reached: "{prefix}&e{player}&r ne peux pas pister d'autre joueurs pour le moment et ne te pistes donc pas..."
+      refused:
+        player: "{prefix}&e{target}&r a &crefusé&r ta requête."
+        target: "{prefix}&e{player}&r ne te pistes plus."
+
+    help:
+      noargs: |
+        &r- &c/{command} &e{tracker}
+        &7  Affiche la liste des joueurs que tu pistes.
+      ASK: |
+        &r- &c/{command} &e{tracker} &6{ASK} &3<nom>
+        &7  Demande à un joueur de le pister.
+      START: |
+        &r- &c/{command} &e{tracker} &6{START} &3<nom>
+        &7  Démarre le pistage d'un joueur (sans demande).
+      STOP: |
+        &r- &c/{command} &e{tracker} &6{STOP} &3<nom>
+        &7  Arrête le pistage d'un joueur.
