@@ -24,19 +24,19 @@ locales:
         &8|
         &8|                 &e{player} &7want to track you.
         &8|
-        &8|                   &8[ {deny} &8] &f/&8 [ {accept} &8] &f?
+        &8|                   &8[ {DENY} &8] &f/&8 [ {ACCEPT} &8] &f?
         &8|
         &8----------------------------------------------------
-      accept: "&a&lACCEPT"
-      accept_hover: |
+      ACCEPT: "&a&lACCEPT"
+      ACCEPT_hover: |
         Click to &e&laccept
         &7 -- or type --
-        &c/sctaccept {player}
-      deny: "&c&lDENY"
-      deny_hover: |
+        &c{command}
+      DENY: "&c&lDENY"
+      DENY_hover: |
         Click to &e&ldeny
         &7 -- or type --
-        &c/sctdeny {player}
+        &c{command}
       accepted:
         player: "{prefix}&e{target}&r has &aaccepted&r your request."
         target: "{prefix}&e{player}&r is now tracking you..."
@@ -45,6 +45,7 @@ locales:
       refused:
         player: "{prefix}&e{target}&r has &crefused&r your request."
         target: "{prefix}&e{player}&r will not track you."
+      expired: "{prefix}&cNo pending request from &e{player}&c."
 
     help:
       noargs: |
@@ -76,19 +77,19 @@ locales:
         &8|
         &8|                 &e{player} &7veut te pister.
         &8|
-        &8|                   &8[ {deny} &8] &f/&8 [ {accept} &8] &f?
+        &8|                   &8[ {DENY} &8] &f/&8 [ {ACCEPT} &8] &f?
         &8|
         &8----------------------------------------------------
-      accept: "&a&lACCEPTER"
-      accept_hover: |
+      ACCEPT: "&a&lACCEPTER"
+      ACCEPT_hover: |
         Clique pour &e&laccepter
         &7 -- ou tape --
-        &c/sctaccept {player}
-      deny: "&c&lREFUSER"
-      deny_hover: |
+        &c{command}
+      DENY: "&c&lREFUSER"
+      DENY_hover: |
         Clique pour &e&lrefuser
         &7 -- ou tape --
-        &c/sctdeny {player}
+        &c{command}
       accepted:
         player: "{prefix}&e{target}&r a &aaccepté&r ta demande."
         target: "{prefix}&e{player}&r te pistes à présent..."
@@ -97,6 +98,7 @@ locales:
       refused:
         player: "{prefix}&e{target}&r a &crefusé&r ta requête."
         target: "{prefix}&e{player}&r ne te pistes plus."
+      expired: "{prefix}&cPas de requête en cours pour &e{player}&c."
 
     help:
       noargs: |

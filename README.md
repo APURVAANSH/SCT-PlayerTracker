@@ -25,4 +25,4 @@ Read [settings.yml](https://github.com/arboriginal/SCT-PlayerTracker/blob/master
 - To be able to request a player to track him, players also need:
     - **scompass.track.PLAYER.request**
 - To be able to accept or deny tracking requests, players must have:
-    - **scompass.track.accept**
+    - **scompass.track.PLAYER.accept**

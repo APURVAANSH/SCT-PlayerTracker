@@ -7,10 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +17,7 @@ import me.arboriginal.SimpleCompass.plugin.AbstractTracker;
 import me.arboriginal.SimpleCompass.plugin.SimpleCompass;
 import me.arboriginal.SimpleCompass.utils.CacheUtil;
 
-public class PlayerTracker extends AbstractTracker implements CommandExecutor, Listener, TabCompleter {
+public class PlayerTracker extends AbstractTracker implements Listener {
   private HashMap<UUID, HashMap<UUID, Long>> requests;
 
   // ----------------------------------------------------------------------------------------------
@@ -30,11 +26,7 @@ public class PlayerTracker extends AbstractTracker implements CommandExecutor, L
 
   public PlayerTracker(SimpleCompass plugin) {
     super(plugin);
-
     requests = new HashMap<UUID, HashMap<UUID, Long>>();
-
-    sc.getCommand("scompass-track-accept").setExecutor(this);
-    sc.getCommand("scompass-track-deny").setExecutor(this);
   }
 
   // ----------------------------------------------------------------------------------------------
@@ -60,6 +52,12 @@ public class PlayerTracker extends AbstractTracker implements CommandExecutor, L
     if (player.hasPermission("scompass.track." + trackerID() + ".silently")
         && (keepUnavailable || !availableTargets(player, "").isEmpty()))
       list.add(TrackingActions.START);
+
+    if (player.hasPermission("scompass.track." + trackerID() + ".accept")
+        && getPlayerTrackerRequests(player) != null) {
+      list.add(TrackingActions.ACCEPT);
+      list.add(TrackingActions.DENY);
+    }
 
     if (keepUnavailable || !list(player, null, "").isEmpty()) list.add(TrackingActions.STOP);
 
@@ -109,20 +107,40 @@ public class PlayerTracker extends AbstractTracker implements CommandExecutor, L
   @Override
   public List<String> list(Player player, TrackingActions action, String startWith) {
     if (action == null) return activeTargets(player, startWith);
+    List<String> list;
 
-    if (action.equals(TrackingActions.STOP)) {
-      List<String> list = new ArrayList<String>();
+    switch (action) {
+      case ACCEPT:
+      case DENY:
+        list = new ArrayList<String>();
 
-      for (OfflinePlayer candidate : sc.getServer().getOfflinePlayers()) {
-        String name = candidate.getName();
-        if (!name.equals(player.getName()))
-          if (startWith.isEmpty() || name.toLowerCase().startsWith(startWith.toLowerCase())) list.add(name);
-      }
+        UUID uid = player.getUniqueId();
+        if (!requests.containsKey(uid)) break;
 
-      return list;
+        requests.get(uid).forEach((seekerUID, until) -> {
+          if (CacheUtil.now() > until)
+            requests.get(uid).remove(seekerUID);
+          else {
+            Player seeker = sc.getServer().getPlayer(seekerUID);
+            if (seeker.isOnline()) list.add(seeker.getName());
+          }
+        });
+        break;
+
+      case STOP:
+        list = new ArrayList<String>();
+        for (OfflinePlayer candidate : sc.getServer().getOfflinePlayers()) {
+          String name = candidate.getName();
+          if (!name.equals(player.getName()))
+            if (startWith.isEmpty() || name.toLowerCase().startsWith(startWith.toLowerCase())) list.add(name);
+        }
+        break;
+
+      default:
+        list = super.list(player, action, startWith);
     }
 
-    return super.list(player, action, startWith);
+    return list;
   }
 
   @Override
@@ -165,6 +183,12 @@ public class PlayerTracker extends AbstractTracker implements CommandExecutor, L
     }
 
     switch (action) {
+      case ACCEPT:
+        return respondPlayerTrackerRequest(player, target, true);
+
+      case DENY:
+        return respondPlayerTrackerRequest(player, target, false);
+
       case ASK:
         if (limitReached(player, TrackingActions.START, true, null)) break;
 
@@ -194,51 +218,6 @@ public class PlayerTracker extends AbstractTracker implements CommandExecutor, L
     return true;
   }
 
-  @Override
-  public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    String cmd = command.getName().toLowerCase();
-
-    switch (cmd) {
-      case "scompass-track-accept":
-      case "scompass-track-deny":
-        if (!(sender instanceof Player) || args.length != 1) return false;
-        return respondPlayerTrackerRequest((Player) sender, args[0], (cmd.equals("scompass-track-accept")));
-    }
-
-    return false;
-  }
-
-  //----------------------------------------------------------------------------------------------
-  // TabCompleter methods
-  // ----------------------------------------------------------------------------------------------
-
-  @Override
-  public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-    switch (command.getName().toLowerCase()) {
-      case "sctaccept":
-      case "sctdeny":
-        if (!(sender instanceof Player) || args.length != 1) return null;
-
-        Set<UUID> candidates = getPlayerTrackerRequests((Player) sender);
-
-        if (candidates == null) return null;
-
-        List<String> list = new ArrayList<String>();
-
-        for (UUID uid : candidates) {
-          Player candidate = sc.getServer().getPlayer(uid);
-
-          if (candidate != null && candidate.getName().toLowerCase().startsWith(args[0].toLowerCase()))
-            list.add(candidate.getName());
-        }
-
-        return list;
-
-      default:
-        return null;
-    }
-  }
-
   // ----------------------------------------------------------------------------------------------
   // Specific methods
   // ----------------------------------------------------------------------------------------------
@@ -262,23 +241,18 @@ public class PlayerTracker extends AbstractTracker implements CommandExecutor, L
 
   public Set<UUID> getPlayerTrackerRequests(Player player) {
     UUID uid = player.getUniqueId();
-
     return requests.containsKey(uid) ? requests.get(uid).keySet() : null;
   }
 
   public long getPlayerTrackerRequest(Player player, Player seeker) {
     UUID pUid = player.getUniqueId(), sUid = seeker.getUniqueId();
-
     cleanPlayerTrackerRequests(player);
-
     if (requests.containsKey(pUid) && requests.get(pUid).containsKey(sUid)) return requests.get(pUid).get(sUid);
-
     return 0;
   }
 
   public void removePlayerTrackerRequest(Player player, Player seeker) {
     UUID pUid = player.getUniqueId(), sUid = seeker.getUniqueId();
-
     if (requests.containsKey(pUid) && requests.get(pUid).containsKey(sUid)) requests.get(pUid).remove(sUid);
   }
 
@@ -288,7 +262,7 @@ public class PlayerTracker extends AbstractTracker implements CommandExecutor, L
 
     Long request = getPlayerTrackerRequest(player, seeker);
     if (request == 0) {
-      sendMessage(player, "request_expired", ImmutableMap.of("player", seekerName));
+      sendMessage(player, "request.expired", ImmutableMap.of("player", seekerName));
       return true;
     }
 
@@ -313,11 +287,12 @@ public class PlayerTracker extends AbstractTracker implements CommandExecutor, L
   public void sendPlayerTrackerRequest(Player hunter, Player target) {
     Map<String, Map<String, String>> commands = new HashMap<String, Map<String, String>>();
 
-    for (String action : ImmutableList.of("accept", "deny")) {
+    for (TrackingActions action : ImmutableList.of(TrackingActions.ACCEPT, TrackingActions.DENY)) {
+      String command = "/sctrack " + trackerName() + " " + getActionName(action) + " " + hunter.getName();
       commands.put("{" + action + "}", ImmutableMap.of(
           "text", prepareMessage("request." + action),
-          "click", "/sct" + action + " " + hunter.getName(),
-          "hover", prepareMessage("request." + action + "_hover", ImmutableMap.of("player", hunter.getName()))));
+          "click", command,
+          "hover", prepareMessage("request." + action + "_hover", ImmutableMap.of("command", command))));
     }
 
     setPlayerTrackerRequest(hunter, target);
