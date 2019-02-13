@@ -45,7 +45,7 @@ public class PlayerTracker extends AbstractTracker implements Listener {
   
   @Override
   public String version() {
-    return "3";
+    return "4";
   }
 
   // ----------------------------------------------------------------------------------------------

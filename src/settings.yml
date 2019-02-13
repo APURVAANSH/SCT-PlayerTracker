@@ -5,6 +5,7 @@ settings:
   temp:   "♃"     # Advanced: Symbol temporary used by the plugin, must be unique, 1 char and not used in "symbol".
 
   request_duration: 120 # Duration (in seconds) before a tracking request expires.
+  auto_disabled: 5 # If player closer than this (in blocks) from the target, the tracking stop automatically (0 to disable).
 
   limits:
     START: 1 # Number of maximum simultaneous positions a player (from this tracker) can track
