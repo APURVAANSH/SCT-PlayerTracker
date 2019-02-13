@@ -30,6 +30,25 @@ public class PlayerTracker extends AbstractTracker implements Listener {
   }
 
   // ----------------------------------------------------------------------------------------------
+  // Tracker methods
+  // ----------------------------------------------------------------------------------------------
+
+  @Override
+  public String github() {
+    return "arboriginal/SCT-PlayerTracker";
+  }
+
+  @Override
+  public String trackerID() {
+    return "PLAYER";
+  }
+  
+  @Override
+  public String version() {
+    return "3";
+  }
+
+  // ----------------------------------------------------------------------------------------------
   // Listener methods
   // ----------------------------------------------------------------------------------------------
 
@@ -62,15 +81,6 @@ public class PlayerTracker extends AbstractTracker implements Listener {
     if (keepUnavailable || !list(player, null, "").isEmpty()) list.add(TrackingActions.STOP);
 
     return list;
-  }
-
-  // ----------------------------------------------------------------------------------------------
-  // Tracker methods
-  // ----------------------------------------------------------------------------------------------
-
-  @Override
-  public String trackerID() {
-    return "PLAYER";
   }
 
   // ----------------------------------------------------------------------------------------------
