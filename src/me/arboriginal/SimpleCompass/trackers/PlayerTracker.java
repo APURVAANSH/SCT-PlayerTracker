@@ -42,10 +42,10 @@ public class PlayerTracker extends AbstractTracker implements Listener {
   public String trackerID() {
     return "PLAYER";
   }
-  
+
   @Override
   public String version() {
-    return "4";
+    return "5";
   }
 
   // ----------------------------------------------------------------------------------------------

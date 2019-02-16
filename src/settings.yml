@@ -1,3 +1,6 @@
+# You can find the default config with description of parameters here:
+# https://github.com/arboriginal/SCT-PlayerTracker/blob/master/src/settings.yml
+
 settings:
   check_update: true # If true, when you (re)load the plugin, it try to check if a new version is available
   
@@ -12,7 +15,7 @@ settings:
 
 locales:
   en:
-    name: "player"
+    name: "player" # Only use alphabetic and numeric values, not space
 
     list: "{prefix}&rTracked players: {list}."
     list_empty: "{prefix}&rNo player tracked."
@@ -64,8 +67,10 @@ locales:
         &r- &c/{command} &e{tracker} &6{STOP} &3<name>
         &7  End the tracking of this player.
 
+    target_auto_disabled: "{prefix}&3You've reached &b{target}&3, tracking disabled in &b{tracker}&3 tracker."
+
   fr:
-    name: "joueur"
+    name: "joueur" # N'utilise que des chiffres et des lettres, pas d'espace
 
     list: "{prefix}&rJoueurs pistés : {list}."
     list_empty: "{prefix}&rAucun joueur pisté."
@@ -116,3 +121,5 @@ locales:
       STOP: |
         &r- &c/{command} &e{tracker} &6{STOP} &3<nom>
         &7  Arrête le pistage d'un joueur.
+
+    target_auto_disabled: "{prefix}&3Tu as atteint &b{target}&3, pistage désactivé dans le tracker &b{tracker}&3."
