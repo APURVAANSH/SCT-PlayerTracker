@@ -26,3 +26,11 @@ Read [settings.yml](https://github.com/arboriginal/SCT-PlayerTracker/blob/master
     - **scompass.track.PLAYER.request**
 - To be able to accept or deny tracking requests, players must have:
     - **scompass.track.PLAYER.accept**
+
+**Optional:** (require you set `settings.autoload_target:true`)
+    
+- You can also use dynamic permissions to let players automatically track player(s) when they join:
+    - **scompass.track.auto.PLAYER.`<name>`**
+    - **scompass.track.auto.PLAYER.Notch** for example to auto track the player named "Notch"
+- To auto track all players (without **scompass.track.auto.PLAYER.`<name>`** for each), players need:
+    - **scompass.track.auto.PLAYER.***
